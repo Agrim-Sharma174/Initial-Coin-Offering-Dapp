@@ -12,6 +12,7 @@ export default function Home() {
   const [balanceOfASCryptoDevTokens, setBalanceOfASCryptoDevTokens] =
     useState(zero);
   const [tokenAmount, setTokenAmount] = useState(zero);
+  const [loading, setLoading] = useState(false);
 
   const getProviderOrSigner = async (needSigner = false) => {
     const provider = await web3ModalRef.current.connect();
@@ -45,8 +46,20 @@ export default function Home() {
     try {
       const signer = await getProviderOrSigner(true);
       const tokenContract = new Contract(
-        
-      )
+        TOKEN_CONTRACT_ADDRESS,
+        TOKEN_CONTRACT_ABI,
+        signer
+      );
+
+      const value = 0.001*amount;
+
+      const tx = await tokenContract.mint(amount,{
+        value: utils.parseEther(value.toString())
+      })
+      setLoading(true);
+      await tx.wait();
+      setLoading(false);
+      window.alert("Successfully minted Agrim Crypto Dev Tokens")
     } catch (error) {
       console.error(err);
     }
