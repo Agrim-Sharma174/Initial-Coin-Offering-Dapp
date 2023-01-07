@@ -13,6 +13,8 @@ export default function Home() {
     useState(zero);
   const [tokenAmount, setTokenAmount] = useState(zero);
   const [loading, setLoading] = useState(false);
+  const [tokensToBeClaimed, settokensToBeClaimed] = useState(zero);
+
 
   const getProviderOrSigner = async (needSigner = false) => {
     const provider = await web3ModalRef.current.connect();
@@ -42,6 +44,60 @@ export default function Home() {
     }
   };
 
+  const getTokensToBeClaimed = async() => {
+    try {
+      const provider = await getProviderOrSigner();
+      const nftContract = new Contract(
+        NFT_CONTRACT_ADDRESS,
+        NFT_CONTRACT_ABI,
+        provider
+      )
+      const signer = await getProviderOrSigner(true);
+      const address = await signer.getAddress();
+      const balance = await nftContract.balanceOf(address);
+
+      
+      
+    } catch (error) {
+      console.error(err);
+    }
+  }
+
+  const getBalanceOfASCryptoDevTokens = async() => {
+    try {
+      const provider = await getProviderOrSigner();
+      const tokenContract = new Contract(
+        TOKEN_CONTRACT_ADDRESS,
+        TOKEN_CONTRACT_ABI,
+        provider
+      );
+      
+      const signer = getProviderOrSigner(true);
+      const address = signer.getAddress();
+      const balance = await tokenContract.balanceOf(address);
+      setBalanceOfASCryptoDevTokens(balance);
+
+    } catch (error) {
+      console.error(err);
+    }
+  };
+
+  const getTotalTokensMinted = async() => {
+    try {
+      const provider = await getProviderOrSigner();
+      const tokenContract = new Contract(
+        TOKEN_CONTRACT_ADDRESS,
+        TOKEN_CONTRACT_ABI,
+        provider
+      )
+      const _tokensMinted = await tokenContract.totalSupply();
+      setTokensMinted(_tokensMinted);
+    } catch (error) {
+      console.error(err);
+    }
+  }
+
+
   const mintCryptoDevToken = async(amount) => {
     try {
       const signer = await getProviderOrSigner(true);
@@ -60,11 +116,28 @@ export default function Home() {
       await tx.wait();
       setLoading(false);
       window.alert("Successfully minted Agrim Crypto Dev Tokens")
+
+      await getBalanceOfASCryptoDevTokens();
+      await getTotalTokensMinted();
     } catch (error) {
       console.error(err);
     }
-  }
+  };
   const renderButton = () => {
+    if(loading) {
+      return (
+        <div>
+          <button className={styles.button}>
+            Loading...
+          </button>
+        </div>
+      )
+    }
+
+    if(tokensToBeClaimed){
+
+    }
+
     return (
       <div style={{ display: "flex-col" }}>
         <div>
