@@ -27,9 +27,9 @@ export default function Home() {
 
     const { chainId } = await web3Provider.getNetwork();
 
-    if (chainId !== 5) {
-      window.alert("Please connect to Goerli Testnet");
-      throw new Error("Please connect to Goerli Testnet");
+    if (chainId !== 11155111) {
+      window.alert("Please connect to sepolia Testnet");
+      throw new Error("Please connect to sepolia Testnet");
     }
 
     if (needSigner) {
@@ -212,7 +212,7 @@ export default function Home() {
   useEffect(() => {
     if (!walletConnected) {
       web3ModalRef.current = new Web3Modal({
-        network: "goerli",
+        network: "sepolia",
         providerOptions: {},
         disableInjectedProvider: false,
       });
