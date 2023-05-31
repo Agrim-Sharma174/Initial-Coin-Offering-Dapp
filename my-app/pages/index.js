@@ -141,7 +141,7 @@ export default function Home() {
       await getTotalTokensMinted();
       await getTokensToBeClaimed();
     } catch (error) {
-      console.error(err);
+      console.error(error);
     }
   };
 
